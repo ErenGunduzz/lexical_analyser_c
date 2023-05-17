@@ -14,7 +14,7 @@ char fpeek(FILE *);
 char* char_to_str(char);
 char* two_char_to_str(char, char);
 
-int main(){
+void main(){
     char ch, ch2, buffer[15] = {0};
     char* str_temp = NULL;
     int i = 0, index = 0;
@@ -74,10 +74,50 @@ int main(){
         else{
             
             if(ch == '"'){
-                
+                str_temp = (char*) malloc(200);
+                i = 0;
+                while ((ch = fgetc(f_ptr)) != EOF){
+                    str_temp[i++] = ch; // ch'nin kontrolunu yaptigi icin bir sonraya gecer
+                    if(fpeek(f_ptr) == '"'){
+                        fgetc(f_ptr);
+                        str_temp[i] = '\0';
+                        break;
+                    }
+                }
+                if (ch == EOF){
+                    // tekrardan " olmadigi icin string kapanmamis olur
+                    fprintf(f_out_ptr, "ERROR: String not closed\n");
+                }
+                fprintf(f_out_ptr, "StringConst(%s)\n", str_temp);
+                free(str_temp);
+            }
+            else if(get_bracket_name(ch) != NULL){fprintf(f_out_ptr, "%s\n", get_bracket_name(ch));}
+            else if(ch == '/' && fpeeü(f_ptr) == '*'){
+                printf("Comment start\n");
+                fgetc(f_ptr);
+                while((ch = fgetc(f_ptr)) != EOF){
+                    if(ch == '*' && fpeek(f_ptr) == '/'){
+                        fgetc(f_ptr);
+                        break;
+                    }
+                }
+                if(ch == EOF){fprintf(f_out_ptr, "ERROR: Comment not closed!\n");}
+                printf("Comment end!\n");
+            }
+            else if(combine_and_check_for_operator(ch, fpeek(f_ptr))){
+                ch2 = fgetc(f_ptr);
+                fprintf(f_out_ptr, "Operator(%c%c)\n", ch, ch2);
+            }
+            else if(is_operator(char_to_str(ch))){
+                fprintf(f_out_ptr, "Operator(%c)\n", ch);
+            }
+            else if(ch == ';'){
+                fprintf(f_out_ptr, "EndOfLine!\n");
             }
         }
     }
+    fclose(f_ptr);
+    fclose(f_out_ptr);
 }
 
 
@@ -155,7 +195,7 @@ char* get_bracket_name(char ch){
     else{return NULL;}
 }
 
-int combine_and_check_for_operator(char char1, char char2){
+int combine_and_check_for_operator(char chr1, char chr2){
     char* temp = two_char_to_str(chr1, chr2);
     int rv; 
     rv = is_operator(temp);
@@ -184,6 +224,7 @@ char* bracketer(char *str, char srch, char srch_cls, int offset){
 char fpeek(FILE *stream){
     char c;
 
+    //used for reading all characters from file
     c = fgetc(stream);
     ungetc(c, stream);
 
