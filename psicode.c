@@ -19,55 +19,55 @@ void main(){
     char* str_temp = NULL;
     int i = 0, index = 0;
 
-    FILE* f_ptr, *f_out_ptr;
-    f_ptr = fopen("code.psi", "r");
-    f_out_ptr = fopen("code.lex", "w");
+    FILE* file_ptr, *file_out_ptr;
+    file_ptr = fopen("code.psi", "r");
+    file_out_ptr = fopen("code.lex", "w");
 
-    if(f_ptr == NULL || f_out_ptr == NULL){
+    if(file_ptr == NULL || file_out_ptr == NULL){
         printf("Error while opening the file...\n");
         exit(1);
     }
-    while((ch = fgetc(f_ptr)) != EOF){
-        if(isdigit(ch) && (isspace(fpeek(f_ptr)) || isdigit(fpeek(f_ptr)) )){
+    while((ch = fgetc(file_ptr)) != EOF){
+        if(isdigit(ch) && (isspace(fpeek(file_ptr)) || isdigit(fpeek(file_ptr)) )){
             str_temp = (char*) malloc(11);
             i = 0;
             str_temp[i] = ch;
-            while ((ch = fgetc(f_ptr)) != EOF && i <= 10)
+            while ((ch = fgetc(file_ptr)) != EOF && i <= 10)
             {
                 str_temp[++i] = ch;
-                if(!isdigit(fpeek(f_ptr))){
+                if(!isdigit(fpeek(file_ptr))){
                     str_temp[++i] = '\0';
                     break;
                 }
             }
             if(i > 10){
-                fprintf(f_out_ptr, "ERROR: INTEGER CONSTANT cannot be longer than 10 characters!\n");            
+                fprintf(file_out_ptr, "ERROR: INTEGER CONSTANT cannot be longer than 10 characters!\n");            
             }
-            else if(ch == EOF){fprintf(f_out_ptr, "ERROR: END OF FILE.\n");}
+            else if(ch == EOF){fprintf(file_out_ptr, "ERROR: END OF FILE.\n");}
             
-            fprintf(f_out_ptr, "IntConst(%s)\n", str_temp);
+            fprintf(file_out_ptr, "IntConst(%s)\n", str_temp);
             free(str_temp);
         }
         else if(isalnum(ch) || ch == '_'){
             buffer[index++] = ch;
 
-            if(isalnum(fpeek(f_ptr))){}
-            else if(fpeek(f_ptr) == '_'){}
+            if(isalnum(fpeek(file_ptr))){}
+            else if(fpeek(file_ptr) == '_'){}
             else{
                 buffer[index] = '\0';
                 index = 0;
 
                 if(is_keyword(buffer)){
-                    fprintf(f_out_ptr, "Keyword(%s)\n", buffer);
+                    fprintf(file_out_ptr, "Keyword(%s)\n", buffer);
                 i = -10;
                 if((i = is_identifier(buffer))==1)
-                    fprintf(f_out_ptr, "Identifier(%s)\n", strlwr(buffer));
+                    fprintf(file_out_ptr, "Identifier(%s)\n", strlwr(buffer));
                 if(i == -1)
-                    fprintf(f_out_ptr, "ERROR: <%s> is too long\n", buffer);
+                    fprintf(file_out_ptr, "ERROR: <%s> is too long\n", buffer);
                 if(i == -2)
-                    fprintf(f_out_ptr, "ERROR: <%s> is not starting with alphabetic character\n", buffer);
+                    fprintf(file_out_ptr, "ERROR: <%s> is not starting with alphabetic character\n", buffer);
                 if(i == -3)
-                    fprintf(f_out_ptr, "ERROR: <%s> is contains non-alphanumeric characters\n", buffer);    
+                    fprintf(file_out_ptr, "ERROR: <%s> is contains non-alphanumeric characters\n", buffer);    
                 }
             }
         }
@@ -76,48 +76,48 @@ void main(){
             if(ch == '"'){
                 str_temp = (char*) malloc(200);
                 i = 0;
-                while ((ch = fgetc(f_ptr)) != EOF){
+                while ((ch = fgetc(file_ptr)) != EOF){
                     str_temp[i++] = ch; // ch'nin kontrolunu yaptigi icin bir sonraya gecer
-                    if(fpeek(f_ptr) == '"'){
-                        fgetc(f_ptr);
+                    if(fpeek(file_ptr) == '"'){
+                        fgetc(file_ptr);
                         str_temp[i] = '\0';
                         break;
                     }
                 }
                 if (ch == EOF){
                     // tekrardan " olmadigi icin string kapanmamis olur
-                    fprintf(f_out_ptr, "ERROR: String not closed\n");
+                    fprintf(file_out_ptr, "ERROR: String not closed\n");
                 }
-                fprintf(f_out_ptr, "StringConst(%s)\n", str_temp);
+                fprintf(file_out_ptr, "StringConst(%s)\n", str_temp);
                 free(str_temp);
             }
-            else if(get_bracket_name(ch) != NULL){fprintf(f_out_ptr, "%s\n", get_bracket_name(ch));}
-            else if(ch == '/' && fpeeü(f_ptr) == '*'){
+            else if(get_bracket_name(ch) != NULL){fprintf(file_out_ptr, "%s\n", get_bracket_name(ch));}
+            else if(ch == '/' && fpeeü(file_ptr) == '*'){
                 printf("Comment start\n");
-                fgetc(f_ptr);
-                while((ch = fgetc(f_ptr)) != EOF){
-                    if(ch == '*' && fpeek(f_ptr) == '/'){
-                        fgetc(f_ptr);
+                fgetc(file_ptr);
+                while((ch = fgetc(file_ptr)) != EOF){
+                    if(ch == '*' && fpeek(file_ptr) == '/'){
+                        fgetc(file_ptr);
                         break;
                     }
                 }
-                if(ch == EOF){fprintf(f_out_ptr, "ERROR: Comment not closed!\n");}
+                if(ch == EOF){fprintf(file_out_ptr, "ERROR: Comment not closed!\n");}
                 printf("Comment end!\n");
             }
-            else if(combine_and_check_for_operator(ch, fpeek(f_ptr))){
-                ch2 = fgetc(f_ptr);
-                fprintf(f_out_ptr, "Operator(%c%c)\n", ch, ch2);
+            else if(combine_and_check_for_operator(ch, fpeek(file_ptr))){
+                ch2 = fgetc(file_ptr);
+                fprintf(file_out_ptr, "Operator(%c%c)\n", ch, ch2);
             }
             else if(is_operator(char_to_str(ch))){
-                fprintf(f_out_ptr, "Operator(%c)\n", ch);
+                fprintf(file_out_ptr, "Operator(%c)\n", ch);
             }
             else if(ch == ';'){
-                fprintf(f_out_ptr, "EndOfLine!\n");
+                fprintf(file_out_ptr, "EndOfLine!\n");
             }
         }
     }
-    fclose(f_ptr);
-    fclose(f_out_ptr);
+    fclose(file_ptr);
+    fclose(file_out_ptr);
 }
 
 
