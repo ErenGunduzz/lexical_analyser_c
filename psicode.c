@@ -7,14 +7,14 @@ int is_identifier(char*);
 int is_operator(char*);
 int is_keyword(char*);
 int reverse_search(char*, char, int);
-char* get_bracket_name(char);
-int combine_and_check_for_operator(char, char);
+char* get_brckt_name(char);
+int check_for_oprtr(char, char);
 char* bracketer(char*, char, char, int);
 char fpeek(FILE *);
-char* char_to_str(char);
-char* two_char_to_str(char, char);
+char* one_chr_oprtr(char);
+char* two_chr_oprtr(char, char);
 
-void main(){
+int main(){
     char ch, ch2, buffer[15] = {0};
     char* str_temp = NULL;
     int i = 0, index = 0;
@@ -61,7 +61,7 @@ void main(){
                     fprintf(file_out_ptr, "Keyword(%s)\n", buffer);
                 i = -10;
                 if((i = is_identifier(buffer))==1)
-                    fprintf(file_out_ptr, "Identifier(%s)\n", strlwr(buffer));
+                    fprintf(file_out_ptr, "Identifier(%s)\n", buffer);
                 if(i == -1)
                     fprintf(file_out_ptr, "ERROR: <%s> is too long\n", buffer);
                 if(i == -2)
@@ -91,8 +91,8 @@ void main(){
                 fprintf(file_out_ptr, "StringConst(%s)\n", str_temp);
                 free(str_temp);
             }
-            else if(get_bracket_name(ch) != NULL){fprintf(file_out_ptr, "%s\n", get_bracket_name(ch));}
-            else if(ch == '/' && fpeeü(file_ptr) == '*'){
+            else if(get_brckt_name(ch) != NULL){fprintf(file_out_ptr, "%s\n", get_brckt_name(ch));}
+            else if(ch == '/' && fpeek(file_ptr) == '*'){
                 printf("Comment start\n");
                 fgetc(file_ptr);
                 while((ch = fgetc(file_ptr)) != EOF){
@@ -104,11 +104,11 @@ void main(){
                 if(ch == EOF){fprintf(file_out_ptr, "ERROR: Comment not closed!\n");}
                 printf("Comment end!\n");
             }
-            else if(combine_and_check_for_operator(ch, fpeek(file_ptr))){
+            else if(check_for_oprtr(ch, fpeek(file_ptr))){
                 ch2 = fgetc(file_ptr);
                 fprintf(file_out_ptr, "Operator(%c%c)\n", ch, ch2);
             }
-            else if(is_operator(char_to_str(ch))){
+            else if(is_operator(one_chr_oprtr(ch))){
                 fprintf(file_out_ptr, "Operator(%c)\n", ch);
             }
             else if(ch == ';'){
@@ -118,13 +118,8 @@ void main(){
     }
     fclose(file_ptr);
     fclose(file_out_ptr);
+    return 0;
 }
-
-
-
-
-
-
 
 int is_identifier(char* str){
     char* p = NULL;
@@ -132,15 +127,14 @@ int is_identifier(char* str){
     if (strlen(str) > 30){
         return -1;
     }
-    str = strlwr(str); // lower case 
+    str = tolower(str);
     // being a letter case
     if (str[0] > 'z' || str[0] < 'a'){
         return -2;
     }
 
-    for (p = str; *p != '\0'; ++p){
-        if(isalnum(*p)){}
-        else if (*p == '_'){}
+    for(p = str; *p != '\0'; ++p){
+        if(isalnum(*p) || *p == '_'){}
         else{return -3;}
     }
     return 1;
@@ -185,7 +179,7 @@ int reverse_search(char* str, char chr, int offset){
     return -1;
 }
 
-char* get_bracket_name(char ch){
+char* get_brckt_name(char ch){
     if(ch == '('){return "LeftPar";}
     else if (ch == ')'){return "RightPar";}
     else if (ch == '['){return "Left Square Bracket";}
@@ -195,8 +189,8 @@ char* get_bracket_name(char ch){
     else{return NULL;}
 }
 
-int combine_and_check_for_operator(char chr1, char chr2){
-    char* temp = two_char_to_str(chr1, chr2);
+int check_for_oprtr(char chr1, char chr2){
+    char* temp = two_chr_oprtr(chr1, chr2);
     int rv; 
     rv = is_operator(temp);
     free(temp);
@@ -231,14 +225,14 @@ char fpeek(FILE *stream){
     return c;
 }
 
-char* char_to_str(char chr){
+char* one_chr_oprtr(char chr){
     char* temp = (char*) malloc(2);
     temp[0] = chr;
     temp[1] = '\0';
     return temp;
 }
 
-char* two_char_to_str(char chr1, char chr2){
+char* two_chr_oprtr(char chr1, char chr2){
     char* temp = (char*)malloc(sizeof(char) * 3);
     temp[0] = chr1;
     temp[1] = chr2;
