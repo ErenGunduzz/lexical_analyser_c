@@ -61,10 +61,10 @@ int main(){
                     fprintf(file_out_ptr, "Keyword(%s)\n", buffer);
                 if((i = is_identifier(buffer)) == 0)
                     fprintf(file_out_ptr, "ERROR: All names must be lower case!\n");
-                if((i = is_identifier(buffer))==1)
+                if((i = is_identifier(buffer)) == 7)
                     fprintf(file_out_ptr, "Identifier(%s)\n", buffer);
                 if(i == -1)
-                    fprintf(file_out_ptr, "ERROR: <%s> must be max. 30 characters\n", buffer);
+                    fprintf(file_out_ptr, "ERROR: <%s> must be maximum 30 characters\n", buffer);
                 if(i == -2)
                     fprintf(file_out_ptr, "ERROR: <%s> must start with alphabetic character\n", buffer);
                 if(i == -3)
@@ -129,7 +129,7 @@ int is_identifier(char* str){
     if (strlen(str) > 30){
         return -1;
     }
-    for(int i=0; i < a;++i){
+    for(int i=0; i < a; ++i){
         if(str[i]>='A' || str[i]<='Z'){
             return 0;
         }
@@ -143,7 +143,9 @@ int is_identifier(char* str){
         if(isalnum(*p) || *p == '_'){}
         else{return -3;}
     }
-    return 1;
+    if(str[0]>='a' && str[0]<='z')
+        return 1;
+    return 7;
 }
 
 int is_operator(char* str){
