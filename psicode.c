@@ -20,8 +20,8 @@ int main(){
     int i = 0, index = 0;
 
     FILE* file_ptr, *file_out_ptr;
-    file_ptr = fopen("code.psi", "r");
-    file_out_ptr = fopen("code.lex", "w");
+    file_ptr = fopen("//home//cicikov//Desktop//lexical_analyser_c//code.psi", "r");
+    file_out_ptr = fopen("//home//cicikov//Desktop//lexical_analyser_c//code.lex", "w");
 
     if(file_ptr == NULL || file_out_ptr == NULL){
         printf("Error while opening the file...\n");
@@ -59,15 +59,16 @@ int main(){
 
                 if(is_keyword(buffer)){
                     fprintf(file_out_ptr, "Keyword(%s)\n", buffer);
-                i = -10;
+                if((i = is_identifier(buffer)) == 0)
+                    fprintf(file_out_ptr, "ERROR: All names must be lower case!\n");
                 if((i = is_identifier(buffer))==1)
                     fprintf(file_out_ptr, "Identifier(%s)\n", buffer);
                 if(i == -1)
-                    fprintf(file_out_ptr, "ERROR: <%s> is too long\n", buffer);
+                    fprintf(file_out_ptr, "ERROR: <%s> must be max. 30 characters\n", buffer);
                 if(i == -2)
-                    fprintf(file_out_ptr, "ERROR: <%s> is not starting with alphabetic character\n", buffer);
+                    fprintf(file_out_ptr, "ERROR: <%s> must start with alphabetic character\n", buffer);
                 if(i == -3)
-                    fprintf(file_out_ptr, "ERROR: <%s> is contains non-alphanumeric characters\n", buffer);    
+                    fprintf(file_out_ptr, "ERROR: <%s> cannot contain non-alphanumeric characters\n", buffer);    
                 }
             }
         }
@@ -123,11 +124,16 @@ int main(){
 
 int is_identifier(char* str){
     char* p = NULL;
+    int a = strlen(str);
     // max 30 char  
     if (strlen(str) > 30){
         return -1;
     }
-    str = tolower(str);
+    for(int i=0; i < a;++i){
+        if(str[i]>='A' || str[i]<='Z'){
+            return 0;
+        }
+    }
     // being a letter case
     if (str[0] > 'z' || str[0] < 'a'){
         return -2;

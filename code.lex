@@ -1,6 +1,5 @@
-Operator(:=)
-Operator(+)
-IntConst(25)
-EndOfLine!
-Operator(++)
+Keyword(int)
+ERROR: All names must be lower case!
+LeftPar
+RightPar
 EndOfLine!
