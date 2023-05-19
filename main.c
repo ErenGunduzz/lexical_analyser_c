@@ -50,8 +50,8 @@ int main(){
             else if(ch == EOF){
                 fprintf(f_out_ptr, "ERROR: End Of File(EOF)!.\n");
             }
-
-            fprintf(f_out_ptr, "IntConst(%s)\n", str_temp);
+            if(i<10 && i > 0)
+                fprintf(f_out_ptr, "IntConst(%s)\n", str_temp);
             free(str_temp);
         }
         //checking keyword or identifier
