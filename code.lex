@@ -1,12 +1,9 @@
-Keyword(int)
-ERROR: All names must be lower case!
-LeftPar
-RightPar
-EndOfLine!
+Identifier(hi)
+Operator(:=)
+Identifier(hello)
 Operator(+)
-Operator(++)
-Operator(/)
-IntConst(7 )
+IntConst(25)
 EndOfLine!
-IntConst(8
-)
+Identifier(hello)
+Operator(++)
+EndOfLine!

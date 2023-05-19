@@ -1,7 +1,3 @@
-int(A);
-+
-++
-/
-7 
-;
-8
+hi := hello + 25;
+hello++;
+/*merhaba*/
