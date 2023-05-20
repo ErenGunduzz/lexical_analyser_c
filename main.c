@@ -21,8 +21,8 @@ int main(){
     int i = 0, index = 0;
     FILE* f_ptr, *f_out_ptr;
     // Enter the code.psi and code.lex file paths on your computer
-    f_ptr = fopen("/home/cicikov/Desktop/lexical_analyser_c/code.psi","r");
-    f_out_ptr = fopen("/home/cicikov/Desktop/lexical_analyser_c/code.lex", "w");
+    f_ptr = fopen("path/code.psi","r");
+    f_out_ptr = fopen("path/code.lex", "w");
 
     if(f_ptr == NULL || f_out_ptr == NULL){
         printf("Error while opening the file\n");
