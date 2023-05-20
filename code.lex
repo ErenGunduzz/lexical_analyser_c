@@ -23,27 +23,22 @@ Operator(/)
 Identifier(increment)
 Operator(/)
 Keyword(break)
-Identifier(break)
 StringConst(this is a string)
 LeftPar
 Identifier(xaxa)
 Left_Curly
 Keyword(continue)
-Identifier(continue)
 Right_Curly
 Identifier(x)
 Operator(:=)
 ERROR: Maximum integer size 10 digits!.
-ERROR: 5dsadsa must start with an alphabetic character!
+ERROR: <5dsadsa> must start with an alphabetic character!
 Identifier(variable_one)
 IntConst(0 )
 Operator(++)
 Keyword(while)
-Identifier(while)
 Keyword(if)
-Identifier(if)
 Keyword(else)
-Identifier(else)
 Operator(++)
 Operator(--)
 Identifier(degisken)
@@ -52,5 +47,4 @@ Operator(-)
 IntConst(5
 )
 Keyword(goto)
-Identifier(goto)
 ERROR: Comment not closed!

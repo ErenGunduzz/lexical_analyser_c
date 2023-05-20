@@ -21,8 +21,8 @@ int main(){
     int i = 0, index = 0;
     FILE* f_ptr, *f_out_ptr;
     // Enter the code.psi and code.lex file paths on your computer
-    f_ptr = fopen("//home//cicikov//Desktop//lexical_analyser_c//code.psi","r");
-    f_out_ptr = fopen("//home//cicikov//Desktop//lexical_analyser_c//code.lex", "w");
+    f_ptr = fopen("/home/cicikov/Desktop/lexical_analyser_c/code.psi","r");
+    f_out_ptr = fopen("/home/cicikov/Desktop/lexical_analyser_c/code.lex", "w");
 
     if(f_ptr == NULL || f_out_ptr == NULL){
         printf("Error while opening the file\n");
@@ -58,26 +58,26 @@ int main(){
         else if(isalnum(ch) || ch == '_'){
             buffer[index++] = ch;
 
-            if(isalnum(fpeek(f_ptr))){
-            }else if (fpeek(f_ptr) == '_') {
-            }else{
-                //fgetc(f_ptr); // waste the whitespace
+            if(isalnum(fpeek(f_ptr))){}
+            else if (fpeek(f_ptr) == '_') {}
+            else{
                 buffer[index] = '\0';
                 index = 0;
-
+                // is any word is keyword, its keyword. if not, it may be identifer or not.
                 if(is_keyword(buffer))
                     fprintf(f_out_ptr, "Keyword(%s)\n", buffer);
-                i = -10;
-                if((i = is_identifier(buffer)) == -1)
-                    fprintf(f_out_ptr, "ERROR: All names must be lower case!\n");
-                if(i == 3)
-                    fprintf(f_out_ptr, "Identifier(%s)\n", buffer);
-                if(i == 0)
-                    fprintf(f_out_ptr, "ERROR: <%s> must be maxiumum 30 characters!\n", buffer);
-                if(i == 1)
-                    fprintf(f_out_ptr, "ERROR: <%s> must start with an alphabetic character!\n", buffer);
-                if(i == 2)
-                    fprintf(f_out_ptr, "ERROR: <%s> cannot contain non-alphanumeric characters!\n", buffer);
+                else{
+                    if((i = is_identifier(buffer)) == -1)
+                        fprintf(f_out_ptr, "ERROR: All names must be lower case!\n");
+                    if(i == 3)
+                        fprintf(f_out_ptr, "Identifier(%s)\n", buffer);
+                    if(i == 0)
+                        fprintf(f_out_ptr, "ERROR: <%s> must be maxiumum 30 characters!\n", buffer);
+                    if(i == 1)
+                        fprintf(f_out_ptr, "ERROR: <%s> must start with an alphabetic character!\n", buffer);
+                    if(i == 2)
+                        fprintf(f_out_ptr, "ERROR: <%s> cannot contain non-alphanumeric characters!\n", buffer);
+                }            
             }
         }
         // if ch is not alphanumeric
