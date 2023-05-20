@@ -147,6 +147,7 @@ int is_identifier(char* str){
     if(strlen(str) > 30){   // maximum 30 characters
         return 0;
     }
+    // not alphabetic
     if(str[0] > 'z' || str[0] < 'a'){
         if (str[0] >= 'A' && str[0] <= 'Z'){
             return -1;
@@ -154,7 +155,7 @@ int is_identifier(char* str){
         else{
             return 1;
         }
-        } // not alphabetic
+        } 
     for(p = str; *p != '\0'; ++p){ 
        if (isalnum(*p) || *p == '_') {} // alphanumerical
        else {return 2;} // not alphanumeric
@@ -176,9 +177,9 @@ int is_operator(char* str){
 }
 
 int is_keyword(char* str){
+    //acceptable keywords
     char keywords[18][10] = {"break","case","char","const","continue","do","else","enum",
                             "float","for","goto","if","int","long","record","return","static","while"};
-    //acceptable keywords
     int i, flag = 0;
 
     for(i = 0; i < 18; ++i){
@@ -202,17 +203,13 @@ int reverse_search(char* str, char chr, int offset){
 }
 
 char* get_brckt_name(char ch){
-    if(ch == '('){
-        return "LeftPar";
-    }else if(ch == ')'){
-        return "RightPar";
-    }else if(ch == '{'){
-        return "LeftCurlyBracket";
-    }else if(ch == '}'){
-        return "RightCurlyBracket";
-    }else{
-        return NULL;
-    }
+    if(ch == '('){return "LeftPar";}
+    else if(ch == ')'){return "RightPar";}
+    else if(ch == '['){return "Left_Square";}
+    else if(ch == ']'){return "Right_Square";}
+    else if(ch == '{'){return "Left_Curly";}
+    else if(ch == '}'){return "Right_Curly";}
+    else{return NULL;}
 }
 
 int check_for_oprtr(char chr1, char chr2){
